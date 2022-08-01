@@ -69,6 +69,25 @@ def convert_to_dataframe(data):
 
     return df
 
+def downsample_data(data, downsample_ratio=5):
+    obj_data = {}
+    print("Down-sampling")
+    for d in data:
+        if d[2] not in obj_data:
+            obj_data[d[2]] = []
+        obj_data[d[2]].append(d)
+
+    for k, v in obj_data.items():
+        print(k, len(v))
+        obj_data[k] = random.sample(v, k=len(v) // downsample_ratio)
+        print(len(obj_data[k]))
+
+    data_processed = []
+
+    for k, v in obj_data.items():
+        data_processed.extend(v)
+
+    return data_processed
 
 ## The dataframe would be helpful for creating the data for objectives O7, O10 ->
 ## We can select all the rows corresponding to the particualr target utterance ID.
@@ -77,7 +96,7 @@ def convert_to_dataframe(data):
 if __name__ == "__main__":
 
     sep = " \\n "
-    Path("data/processed/").mkdir(parents=True, exist_ok=True)
+
     pos_set = ["NOUN", "VERB"]
 
     parser = argparse.ArgumentParser(description='Get pretraining objectives')
@@ -85,6 +104,9 @@ if __name__ == "__main__":
     parser.add_argument("--do_pretrain", action="store_true")
     parser.add_argument("--do_ablation", action="store_true")
     args = parser.parse_args()
+
+    Path("data/cicero_{}/pretraining/".format(args.data_version)).mkdir(parents=True, exist_ok=True)
+
 
     if args.do_pretrain:
         nlp = spacy.load("en_core_web_md")
@@ -454,19 +476,11 @@ if __name__ == "__main__":
             return data
 
 
+        data_folder = "data/cicero_{}/".format(args.data_version)
         for split in ["train", "val", "test"]:
-            if args.data_version == "v1":
-                data = [json.loads(line) for line in open("data/" + split + ".json")]
-            elif args.data_version == "v2":
-                data_pre = [json.loads(line) for line in open("data/cicero_v2/main/" + split + "_v2.json")]
-                data = []
-                for d in data_pre:
-                    for ans in d["Correct Answers"]:
-                        d_written = d.copy()
-                        d_written["Human Written Answer"] = [ans]
-                        data.append(d_written)
-            else:
-                raise NotImplementedError
+
+            data = open(data_folder + "{}.json".format(split)).readlines()
+            data = [json.loads(line) for line in data]
 
             df = convert_to_dataframe(data)
             data = []
@@ -477,7 +491,11 @@ if __name__ == "__main__":
 
             ## add data for the other objectives
 
-            f = open("data/processed/" + split + "_{}.json".format(args.data_version), "w")
+            f = open(data_folder + "pretraining/{}_pretrain.json".format(split), "w")
+
+            if split=="val":
+                data = downsample_data(data, downsample_ratio=5)
+
             for content in data:
                 line = {"input": content[0], "output": content[1], "objective": content[2]}
                 # line = {"input": content[0], "output": content[1]}
@@ -485,6 +503,7 @@ if __name__ == "__main__":
             f.close()
 
     if args.do_ablation:
+
 
         # Group the objectives for ablation study
         ablation_mapping = {"generate": ["1a", "1b", "2a", "2b", "3a", "3b", "7"],

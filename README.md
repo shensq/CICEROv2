@@ -16,6 +16,8 @@ This repository contains the implementation of the following paper:
 > <br> *Contextual commonsense inference is the task of generating various types of explanations around the events in a dyadic dialogue, including cause, motivation, emotional reaction, and others. Producing a coherent and non-trivial explanation requires awareness of the dialogue's structure and of how an event is grounded in the context.*
 > <br> <br> *In this work, we create CICERO-v2, a dataset consisting of 7,661 instances from 2,257 dialogues, containing multiple human-written answers for each contextual commonsense inference question, representing a type of explanation on cause, subsequent event, motivation, and emotional reaction. We show that the inferences in CICERO-v2 are more semantically diverse than other contextual commonsense inference datasets. To solve the inference task, we propose a collection of pre-training objectives, including concept denoising and utterance sorting to prepare a pre-trained model for the downstream contextual commonsense inference task. Our results show that the proposed pre-training objectives are effective at adapting the pre-trained T5-Large model for the contextual commonsense inference task.*
 
+<img src="https://declare-lab.net/assets/images/resources/cicero_v2.png" alt="CICERO_v2 Inferences" width="800"/>
+
 
 ## Resources
 
@@ -39,21 +41,21 @@ The code is checked for the following settings.
 
 ## Documentation
 ### Data Preparation
-**[Skipped]** Download CICERO v1/v2 dataset, separate samples multiview commonsense inference questions. 
+**[Data of v2 is not online yet]** Download CICERO v1/v2 dataset, separate samples multiview commonsense inference questions. 
 ```
-sh script/get_CICERO.sh
+sh script/get_dataset.sh
 ```
 
 To prepare the pretraining objectives.  
 ```
-the code to run the experiment
+sh script/get_pretrain_objectives.sh
 ```
 * `param1`: description of the param
 
 ### Another experiment
 
 
-<h1> References </h1> 
+## References
 
 Please cite this repository using the following reference:
 
