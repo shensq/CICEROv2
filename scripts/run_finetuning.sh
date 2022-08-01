@@ -1,10 +1,19 @@
 #!/bin/sh
 
+if [ ! $# -eq 3 ]; then
+  echo "Please specify (1) backbone model; (2) checkpoint steps; (3) random seed; in the commandline. "
+  echo "E.g.: run_finetuning.sh t5-base 25000 42"
+  exit
+#  PRETRAINED_MODEL="t5-base"
+#  CHECKPOINT="checkpoint-25000"
+#  RANDOM_SEED=100
+fi
+
+PRETRAINED_MODEL=$1
+CHECKPOINT="checkpoint-${2}"
+RANDOM_SEED=$3
+
 DATA_FOLDER="data/cicero_v2/preprocessed"
-#OUTPUT_FOLDER="/scratch/mihalcea_root/mihalcea0/shensq/t5_$1_mcq_$2"
-PRETRAINED_MODEL="t5-base"
-CHECKPOINT="checkpoint-25000"
-RANDOM_SEED=100
 
 PRETRAINED_MODEL_FOLDER="experiments/pretrain/${PRETRAINED_MODEL}/${CHECKPOINT}"
 OUTPUT_FOLDER="experiments/finetune"

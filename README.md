@@ -16,8 +16,10 @@ This repository contains the implementation of the following paper:
 > <br> *Contextual commonsense inference is the task of generating various types of explanations around the events in a dyadic dialogue, including cause, motivation, emotional reaction, and others. Producing a coherent and non-trivial explanation requires awareness of the dialogue's structure and of how an event is grounded in the context.*
 > <br> <br> *In this work, we create CICERO-v2, a dataset consisting of 7,661 instances from 2,257 dialogues, containing multiple human-written answers for each contextual commonsense inference question, representing a type of explanation on cause, subsequent event, motivation, and emotional reaction. We show that the inferences in CICERO-v2 are more semantically diverse than other contextual commonsense inference datasets. To solve the inference task, we propose a collection of pre-training objectives, including concept denoising and utterance sorting to prepare a pre-trained model for the downstream contextual commonsense inference task. Our results show that the proposed pre-training objectives are effective at adapting the pre-trained T5-Large model for the contextual commonsense inference task.*
 
-<img src="https://declare-lab.net/assets/images/resources/cicero_v2.png" alt="CICERO_v2 Inferences" width="800"/>
 
+<img src="https://declare-lab.net/assets/images/resources/cicero.png" alt="CICERO_v2 Inferences" width="800"/>
+<br>
+<b>Image to be replaced</b>
 
 ## Resources
 
@@ -43,18 +45,39 @@ The code is checked for the following settings.
 ### Data Preparation
 **[Data of v2 is not online yet]** Download CICERO v1/v2 dataset, separate samples multiview commonsense inference questions. 
 ```
-sh script/get_dataset.sh
+sh script/download_dataset.sh
 ```
 
-To prepare the pretraining objectives.  
+To prepare the pretraining objectives, including data for ablation study.  
 ```
-sh script/get_pretrain_objectives.sh
+sh script/get_pretrain_objectives.sh $data_version
 ```
-* `param1`: description of the param
-
-### Another experiment
+* `--data_version`: Select from `v1` or `v2`, prepare the pretraining objective on which dataset, `v1` by default. 
 
 
+### Run Pretraining
+Train the language model in a seq2seq manner with proposed objectives built in the early steps. 
+```
+sh script/run_pretrain.sh $model
+```
+* `--model`: The model to do the pretraining on. Will use `t5-base` model if not specified. 
+
+### Run Finetuning and Evaluation
+Finetune the model on multiview commonsense inference task, and measure its performance of exact match accuracy and F1 score. 
+
+```
+sh script/run_finetuning.sh $backbone_model $checkpoint_steps $random_seed
+```
+
+E.g. a valid set of parameter can be `t5-base 25000 42`
+
+Evaluate the finetuned model by running
+```
+sh script/evaluate.sh $finetuned_model $data_version
+```
+<br>e.g. `sh script/evaluate.sh mcq_t5-base_checkpoint-15000_42 v1`
+* `$finetuned_model`: the folder containing the checkpoint of finetuned model located in `experiments/finetune` folder.
+* `$data_version`: `v1` or `v2`. 
 ## References
 
 Please cite this repository using the following reference:

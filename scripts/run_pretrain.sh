@@ -1,8 +1,12 @@
 #!/bin/sh
 
+if [ $# -eq 0 ]; then
+  PRETRAINING_MODEL="t5-base"
+else
+  PRETRAINING_MODEL=$1
+fi
+
 DATA_FOLDER="data/cicero_v1/pretraining"
-# OUTPUT_FOLDER="/scratch/mihalcea_root/mihalcea0/shensq/DIALECT/experiments/pretrain"
-PRETRAINING_MODEL="t5-base"
 OUTPUT_FOLDER="experiments/pretrain"
 
 # python -m torch.distributed.launch --nproc_per_node=4 --node_rank=0 src/run_seq2seq.py \
@@ -15,7 +19,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python src/run_seq2seq.py \
 --per_device_train_batch_size=8 --per_device_eval_batch_size=8 --weight_decay=0.005 \
 --do_train True --do_eval True --evaluation_strategy="steps" --eval_steps 5000 --save_strategy="steps" --save_steps 5000 \
 --logging_steps 50 \
---report_to "wandb" --run_name "$PRETRAINING_MODEL pretrain" --save_total_limit=15
-# --seed 200
+--report_to "wandb" --run_name "$PRETRAINING_MODEL pretrain" --save_total_limit=15 \
+--seed 200
 
 

@@ -226,7 +226,7 @@ def main():
             metrics_logging["micro_prf"] = [micro_p, micro_r, micro_f]
             metrics_logging["macro_prf"] = [macro_p, macro_r, macro_f]
 
-            with open("aggregate_result", 'a') as f:
+            with open("aggregate_result.json", 'a') as f:
                 f.write(json.dumps(metrics_logging)+'\n')
 
         # print (len(scores), np.sum(scores))
