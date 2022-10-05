@@ -8,7 +8,7 @@
 
 This repository contains the implementation of the following paper:
 
-> **Pre-training Text-to-Text Transformers for Multiview Contextual Commonsense Inference in Dialogues**<br>
+> **Multiview Contextual Commonsense Inference: A New Dataset and Task**<br>
 > Authors <br>
 > https://www.overleaf.com/project/6269f7e19338f1d031212f25
 >
