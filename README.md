@@ -62,6 +62,7 @@ sh script/run_pretrain.sh $model
 ```
 * `--model`: The model to do the pretraining on. Will use `t5-base` model if not specified. 
 
+We provide the checkpoint based on `t5-large` [here](https://huggingface.co/shensq0814/CICEROv2)
 ### Run Finetuning and Evaluation
 Finetune the model on multiview commonsense inference task, and measure its performance of exact match accuracy and F1 score. 
 
